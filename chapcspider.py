@@ -3,15 +3,12 @@ import scrapy
 import json
 import subprocess
 
-mangainfo = 'http://mangafox.me/manga/one_piece/'
-chapter_start_page = 'http://mangafox.me/manga/one_piece/vTBD/c877/1.html'
-Manga_Name = "One Piece"
-curr_chapter = 877
+Chapter_Base_Page = 'http://mangafox.me/manga/one_piece/vTBD/c877/'
 
 class ChapspiderSpider(scrapy.Spider):
     name = 'chapspider'
-    allowed_domains = [mangainfo]
-    start_urls = [chapter_start_page]
+    allowed_domains = [Chapter_Base_Page]
+    start_urls = [Chapter_Base_Page+"1.html"]
 
     def parse(self, response):
 
@@ -30,16 +27,16 @@ class ChapspiderSpider(scrapy.Spider):
         page_details = {}
         for  i in range(1,chapter_detail['curr_chapter_total_page']+1):
             #Running the spiders
-            subprocess.run(["scrapy","runspider","chapncspider.py","-a","curr_page="+str(i)])
+            subprocess.run(["scrapy","runspider","chapncspider.py","-a","curr_page="+str(i),"-a","Chapter_Base_Page="+Chapter_Base_Page])
 
             #Extracting the information extracted from each page
-            data_file = open(Manga_Name+str(curr_chapter)+".json","r")
+            data_file = open(chapter_detail['Manga_Name']+str(chapter_detail['curr_chapter'])+".json","r")
             page_details.update(json.load(data_file))
             data_file.close()
 
         chapter_detail['page_no_and_img_link'] = page_details
 
         #Saving the data which remain unchanged within the chapter
-        write_file = open(Manga_Name+str(curr_chapter)+".json", "w", encoding = "utf-8")
+        write_file = open(chapter_detail['Manga_Name']+str(chapter_detail['curr_chapter'])+".json", "w", encoding = "utf-8")
         json.dump(chapter_detail, write_file, ensure_ascii = False)
         write_file.close()
