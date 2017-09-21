@@ -13,12 +13,6 @@ manga_url_id = manga_name.lower().replace(" ","_")
 manga_url = 'http://mangafox.me/manga/'+manga_url_id+'/'
 
 
-"""
-    Try - Catch, to check if the Url can be obtained from the manga name
-"""
-
-
-
 #Grabbing the directory page
 client = request(manga_url)
 page = client.read()
@@ -77,12 +71,12 @@ for i in range(0,len(container_vol_stat)):
     det = {}
     for j in range(0,len(chap_list)):
         if float(chap_list[j]) >= float(start) and float(chap_list[j]) <= float(end):
-            chap.append({chap_list[j]:title_list[j],'link':chap_link_list[j]})
+            chap.append({int(chap_list[j]):title_list[j],'link':chap_link_list[j]})
     volume_no = container_vol_stat[i].h3.text.split()[1]
     #if volume number is not abailable then set it to TBA
     if not volume_no.isdigit():
         volume_no = 'TBA'
-    det[volume_no] = {'start':start,'end':end,'chap_list':chap}
+    det[volume_no] = {'start':int(start),'end':int(end),'chap_list':chap}
     details["Volume_stat"].append(det)
 
 

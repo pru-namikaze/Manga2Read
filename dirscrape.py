@@ -55,7 +55,7 @@ for i in range(0,len(name)):
         dictionary["name"] = name[i]
         dictionary["link"] = link[i]
         dictionary["rank"] = i
-        dictionary["rating"] = rating[i]
+        dictionary["rating"] = int(rating[i])
         dictionary["latest_chapter_no"] = latest_chapter_no[i]
         dictionary["latest_chapter_link"] = latest_chapter_link[i]
         manga[name[i]] = dictionary
