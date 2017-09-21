@@ -3,12 +3,15 @@ import scrapy
 import json
 import subprocess
 
-Chapter_Base_Page = 'http://mangafox.me/manga/one_piece/vTBD/c877/'
+#Chapter_Base_Page = 'http://mangafox.me/manga/one_piece/vTBD/c877/'
 
 class ChapspiderSpider(scrapy.Spider):
     name = 'chapspider'
-    allowed_domains = [Chapter_Base_Page]
-    start_urls = [Chapter_Base_Page+"1.html"]
+    def __init__(self, Chapter_Base_Page, *args, **kwargs):
+        super(ChapspiderSpider,self).__init__(*args, **kwargs)
+        self.allowed_domains = [Chapter_Base_Page]
+        self.start_urls = [Chapter_Base_Page+'1.html']
+
 
     def parse(self, response):
 
@@ -22,12 +25,11 @@ class ChapspiderSpider(scrapy.Spider):
         chapter_detail['curr_chapter_total_page'] = int(response.xpath("//div[@class='l']/text()").extract()[1].strip().split()[1])
 
 
-
         #All the page and their respective image link in a chapter
         page_details = {}
         for  i in range(1,chapter_detail['curr_chapter_total_page']+1):
             #Running the spiders
-            subprocess.run(["scrapy","runspider","chapncspider.py","-a","curr_page="+str(i),"-a","Chapter_Base_Page="+Chapter_Base_Page])
+            subprocess.run(["scrapy","runspider","chapncspider.py","-a","curr_page="+str(i),"-a","Chapter_Base_Page="+self.allowed_domains[0]])
 
             #Extracting the information extracted from each page
             data_file = open(chapter_detail['Manga_Name']+str(chapter_detail['curr_chapter'])+".json","r")

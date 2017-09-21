@@ -9,7 +9,7 @@ class ChapncspiderSpider(scrapy.Spider):
 
     def __init__(self, curr_page,Chapter_Base_Page, *args, **kwargs):
         super(ChapncspiderSpider,self).__init__(*args, **kwargs)
-        self.start_urls = [Chapter_Base_Page+str(curr_page)+'.html/']
+        self.start_urls = [Chapter_Base_Page+str(curr_page)+'.html']
 
     def parse(self, response):
         #Scraping the Manga Name and Current Chapter Number
