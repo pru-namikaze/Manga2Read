@@ -17,11 +17,18 @@ class ChapspiderSpider(scrapy.Spider):
 
         #If no file is present then make a new dictionary
         chapter_detail = {}
+
         #The data which remain common within pages
         name_and_num = response.xpath("//h1/a/text()").extract_first().strip().split()
-        chapter_detail['curr_chapter'] = int(name_and_num.pop())
+        chapter_detail['curr_chapter'] = float(name_and_num.pop())
         chapter_detail['Manga_Name'] =  ' '.join(name_and_num).strip()
-        chapter_detail['curr_volume'] = response.xpath("//div[@id='series']/strong/text()").extract()[0].strip().split('v')[len(response.xpath("//div[@id='series']/strong/text()").extract())-1]
+
+        #to check if the manga contain more than one volume
+        try:
+            chapter_detail['curr_volume'] = response.xpath("//div[@id='series']/strong/text()").extract()[0].strip().split('v')[len(response.xpath("//div[@id='series']/strong/text()").extract())-1]
+        except IndexError:
+            chapter_detail['curr_volume'] = 'TBA'
+
         chapter_detail['curr_chapter_total_page'] = int(response.xpath("//div[@class='l']/text()").extract()[1].strip().split()[1])
 
 
@@ -36,6 +43,7 @@ class ChapspiderSpider(scrapy.Spider):
             page_details.update(json.load(data_file))
             data_file.close()
 
+        #Adding the page_detail{page:img_link} to the dictionary
         chapter_detail['page_no_and_img_link'] = page_details
 
         #Saving the data which remain unchanged within the chapter

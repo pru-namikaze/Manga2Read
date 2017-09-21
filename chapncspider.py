@@ -14,7 +14,7 @@ class ChapncspiderSpider(scrapy.Spider):
     def parse(self, response):
         #Scraping the Manga Name and Current Chapter Number
         name_and_num = response.xpath("//h1/a/text()").extract_first().strip().split()
-        curr_chapter = int(name_and_num.pop())
+        curr_chapter = float(name_and_num.pop())
         manga_name =  ' '.join(name_and_num).strip()
         #Scraping the Page Number and its Link
         vol = response.xpath("//div[@id='series']/strong/text()").extract()
